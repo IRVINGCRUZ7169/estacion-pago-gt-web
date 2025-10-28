@@ -1,6 +1,7 @@
 import ServiceCard from '../components/ServiceCard';
 import Footer from '../components/Footer';
 import { FaMobileAlt, FaPaperPlane, FaBus, FaFileInvoice } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const date = new Date().toLocaleDateString('es-ES', {
@@ -9,7 +10,15 @@ export default function Home() {
     month: 'long',
     year: 'numeric'
   });
-  const time = new Date().toLocaleTimeString('es-ES');
+  // real-time clock
+  const [time, setTime] = useState(() => new Date().toLocaleTimeString('es-ES'));
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(new Date().toLocaleTimeString('es-ES'));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div style={styles.wrapper}>

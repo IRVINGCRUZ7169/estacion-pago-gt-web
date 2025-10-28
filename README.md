@@ -44,6 +44,15 @@ Se incluye un workflow de GitHub Actions que ejecuta `npm ci` y `npm run build` 
 
 El proxy de server (archivo `server/proxy.js`) orquesta llamadas a los upstreams configurados en `server/config/credentials.json` y guarda peticiones/respuestas en `src/procesos/`.
 
+Nota: el directorio `src/procesos/` contiene logs y datos de ejecución locales y está excluido del repositorio (`.gitignore`).
+Por tanto, los archivos de log se encuentran sólo en tu copia local del proyecto. Para ver los logs en tu máquina local, revisa:
+
+```
+src/procesos/
+```
+
+Si necesitas preservar algunos logs para diagnóstico, cópialos fuera de `src/procesos/` antes de hacer commit, o muévelos a una carpeta no ignorada (con precaución para no subir datos sensibles).
+
 ## Contribuir
 
 1. Haz fork y crea una rama de trabajo.

@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - proxy
+
+  proxy:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      - PORT=3001
+      - ALLOWED_ORIGIN=http://localhost
+    ports:
+      - "3001:3001"
+    restart: unless-stopped

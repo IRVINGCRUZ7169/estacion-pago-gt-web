@@ -180,21 +180,23 @@ app.post('/api/operador', async (req, res) => {
 
     const operadorIdStr = operatorIdValue != null ? String(operatorIdValue) : null;
 
-    // If operator is CLARO (id '1'), automatically fetch products and save to claro-productos.json
+    // If we have an operadorId from the lookup, attempt to fetch products
+    // using the configured ObtieneProductos entry for that operador (if present).
     try {
-      if (operadorIdStr === '1') {
+      if (operadorIdStr) {
         const prodEntry = await findConfigEntry('ObtieneProductos', operadorIdStr);
         if (prodEntry) {
           const prodHeaders = buildAuthHeaders(prodEntry.credencial);
+          // Call upstream ObtieneProductos with operadorId (payload shape depends on upstream; we use { operadorId })
           const prodResult = await postToUpstream(prodEntry.url, { operadorId: operadorIdStr }, prodHeaders);
-          const claroFile = path.join(process.cwd(), 'src', 'procesos', 'claro-productos.json');
-          const claroLog = {
+          const productsFile = path.join(process.cwd(), 'src', 'procesos', `${operadorIdStr}-productos.json`);
+          const productsLog = {
             timestamp: new Date().toISOString(),
             operadorId: operadorIdStr,
             request: { url: prodEntry.url, body: { operadorId: operadorIdStr } },
             response: { status: prodResult.status, body: prodResult.body }
           };
-          try { await fs.writeFile(claroFile, JSON.stringify(claroLog, null, 2)); } catch (e) { console.error('Failed to write claro-productos file', e); }
+          try { await fs.writeFile(productsFile, JSON.stringify(productsLog, null, 2)); } catch (e) { console.error('Failed to write products file', e); }
         }
       }
     } catch (e) {

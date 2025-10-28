@@ -20,5 +20,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 *.log
+ 
+# Ignore runtime proceso logs
+src/procesos/
 
 estacion-pago-gt-web/
